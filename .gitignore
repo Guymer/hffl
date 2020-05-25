@@ -17,3 +17,4 @@ pylint.log
 # Hide large datasets ...
 *.geojson
 *.zip
+OrdnanceSurveyBackgroundImages
