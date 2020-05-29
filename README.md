@@ -16,4 +16,4 @@ HFFL requires the following Python modules to be installed and available in your
 
 ## Bugs
 
-* The GeoJSON files that the script saves (to save time the next time it is run) are not reversible. When a GeoJSON is written, each of the Polygons that makes up the MultiPolygon is valid (according to the `.is_valid` Shapely value). However, upon loading some of the Polygons that make up the MultiPolygon are now invalid (according to the `.is_valid` Shapely value). I suspect that this is a loss of precision issue, but I might be wrong.
+* The GeoJSON files that the script saves (to save time the next time it is run) are not reversible. When a GeoJSON is written, each of the Polygons that makes up the MultiPolygon has already been checked to make sure that it is valid (according to the `.is_valid` Shapely value). However, upon loading the GeoJSON some of the Polygons that make up the MultiPolygon are now invalid (again, according to the `.is_valid` Shapely value). I suspect that this is a loss of precision issue, but I might be wrong.
