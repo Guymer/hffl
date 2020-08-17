@@ -325,8 +325,7 @@ for y, x, title, stub in locs:
     ax.legend(lines, labels, bbox_to_anchor = (1.0, 0.5), fontsize = "small", ncol = 1)
     fg.savefig(stub + ".png", bbox_inches = "tight", dpi = dpi, pad_inches = 0.1)
     if not debug:
-        pyguymer3.exiftool(stub + ".png")
-        pyguymer3.optipng(stub + ".png")
+        pyguymer3.optimize_image(stub + ".png", strip = True)
     matplotlib.pyplot.close("all")
 
     # Stop looping if debugging ...
