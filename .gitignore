@@ -17,5 +17,6 @@ shellcheck.log
 
 # Hide large datasets ...
 *.geojson
+*.png
 *.zip
 OrdnanceSurveyBackgroundImages
