@@ -18,7 +18,7 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
 
     # Check argument ...
     if not isinstance(sfObj, shapefile.Reader):
-        raise TypeError("\"sfObj\" is not a Reader")
+        raise TypeError("\"sfObj\" is not a shapefile.Reader")
 
     # **************************************************************************
     # *                    STEP 1: CREATE LIST OF POLYGONS                     *
