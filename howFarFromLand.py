@@ -93,10 +93,10 @@ sess.close()
 
 # Define locations ...
 locs = [
-    (51.268, -1.088, "Basingstoke Train Station", "basingstoke"),               # [°]. [°]
-    (51.459, -0.974, "Reading Train Station"    , "reading"    ),               # [°]. [°]
-    (53.378, -1.462, "Sheffield Train Station"  , "sheffield"  ),               # [°]. [°]
-    (54.779, -1.583, "Durham Train Station"     , "durham"     ),               # [°]. [°]
+    (51.268, -1.088, "Basingstoke Train Station", "basingstoke"),               # [°], [°]
+    (51.459, -0.974, "Reading Train Station"    , "reading"    ),               # [°], [°]
+    (53.378, -1.462, "Sheffield Train Station"  , "sheffield"  ),               # [°], [°]
+    (54.779, -1.583, "Durham Train Station"     , "durham"     ),               # [°], [°]
 ]
 
 # Loop over locations ...
