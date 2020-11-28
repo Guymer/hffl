@@ -26,7 +26,7 @@ except:
 try:
     import shapefile
 except:
-    raise Exception("\"pyshp\" is not installed; run \"pip install --user pyshp\"") from None
+    raise Exception("\"shapefile\" is not installed; run \"pip install --user pyshp\"") from None
 try:
     import shapely
     import shapely.ops
