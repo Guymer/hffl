@@ -11,27 +11,27 @@ try:
     import cartopy
     import cartopy.crs
 except:
-    raise Exception("run \"pip install --user cartopy\"")
+    raise Exception("\"cartopy\" is not installed; run \"pip install --user Cartopy\"") from None
 try:
     import geojson
     geojson.geometry.Geometry.__init__.__defaults__ = (None, False, 12)         # NOTE: https://github.com/jazzband/geojson/issues/135#issuecomment-596509669
 except:
-    raise Exception("run \"pip install --user geojson\"")
+    raise Exception("\"geojson\" is not installed; run \"pip install --user geojson\"") from None
 try:
     import matplotlib
     matplotlib.use("Agg")                                                       # NOTE: https://matplotlib.org/gallery/user_interfaces/canvasagg.html
     import matplotlib.pyplot
 except:
-    raise Exception("run \"pip install --user matplotlib\"")
+    raise Exception("\"matplotlib\" is not installed; run \"pip install --user matplotlib\"") from None
 try:
     import shapefile
 except:
-    raise Exception("run \"pip install --user pyshp\"")
+    raise Exception("\"pyshp\" is not installed; run \"pip install --user pyshp\"") from None
 try:
     import shapely
     import shapely.ops
 except:
-    raise Exception("run \"pip install --user shapely\"")
+    raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
 
 # Import my modules ...
 import funcs
@@ -180,7 +180,7 @@ for y, x, title, stub in locs:
         # Create multipolygon ...
         multipoly = shapely.ops.unary_union(polys)
         if not multipoly.is_valid:
-            raise Exception("the generated MultiPolygon is not valid")
+            raise Exception("the generated MultiPolygon is not valid") from None
 
         # Save GeoJSON ...
         geojson.dump(

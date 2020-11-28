@@ -3,12 +3,12 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
     try:
         import shapefile
     except:
-        raise Exception("run \"pip install --user pyshp\"")
+        raise Exception("\"pyshp\" is not installed; run \"pip install --user pyshp\"") from None
     try:
         import shapely
         import shapely.ops
     except:
-        raise Exception("run \"pip install --user shapely\"")
+        raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
 
     # Import my modules ...
     try:
@@ -32,7 +32,7 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
     for shapeRecord in sfObj.iterShapeRecords():
         # Crash if this shape+record is not a shapefile polygon ...
         if shapeRecord.shape.shapeType != shapefile.POLYGON:
-            raise Exception("\"shape\" is not a POLYGON")
+            raise Exception("\"shape\" is not a POLYGON") from None
 
         # Convert shapefile.Shape to shapely.geometry.polygon.Polygon or
         # shapely.geometry.multipolygon.MultiPolygon ...

@@ -4,7 +4,7 @@ def dump(poly):
         import shapely
         import shapely.geometry
     except:
-        raise Exception("run \"pip install --user shapely\"")
+        raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
 
     # Check argument ...
     if not isinstance(poly, shapely.geometry.polygon.Polygon):

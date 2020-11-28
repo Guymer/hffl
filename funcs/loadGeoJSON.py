@@ -4,12 +4,12 @@ def loadGeoJSON(fname):
         import geojson
         geojson.geometry.Geometry.__init__.__defaults__ = (None, False, 12)     # NOTE: https://github.com/jazzband/geojson/issues/135#issuecomment-596509669
     except:
-        raise Exception("run \"pip install --user geojson\"")
+        raise Exception("\"geojson\" is not installed; run \"pip install --user geojson\"") from None
     try:
         import shapely
         import shapely.ops
     except:
-        raise Exception("run \"pip install --user shapely\"")
+        raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
 
     # Load GeoJSON ...
     data = geojson.load(open(fname, "rt"))
@@ -22,7 +22,7 @@ def loadGeoJSON(fname):
         # Make list containing all Polygons ...
         polys1 = data["coordinates"]
     else:
-        raise Exception("geometry not supported")
+        raise Exception("geometry not supported") from None
 
     # Initialize list ...
     polys2 = []
@@ -87,7 +87,7 @@ def loadGeoJSON(fname):
     # Make MulitPolygon ...
     multipoly = shapely.geometry.multipolygon.MultiPolygon(polys2)
     if not multipoly.is_valid:
-        raise Exception("\"multipoly\" is not a valid [Multi]Polygon")
+        raise Exception("\"multipoly\" is not a valid [Multi]Polygon") from None
 
     # Return answer ...
     return multipoly
