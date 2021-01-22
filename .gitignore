@@ -16,6 +16,7 @@ pylint.log
 shellcheck.log
 
 # Hide large datasets ...
+*.bin
 *.geojson
 *.png
 *.zip
