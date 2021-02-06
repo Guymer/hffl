@@ -6,13 +6,13 @@ This project aims to show how far away you are from National Trust or Open Acces
 
 HFFL requires the following Python modules to be installed and available in your `PYTHONPATH`.
 
-* [cartopy](https://pypi.org/project/Cartopy)
-* [geojson](https://pypi.org/project/geojson)
-* [matplotlib](https://pypi.org/project/matplotlib)
-* [PIL](https://pypi.org/project/Pillow)
+* [cartopy](https://pypi.org/project/Cartopy/)
+* [geojson](https://pypi.org/project/geojson/)
+* [matplotlib](https://pypi.org/project/matplotlib/)
+* [PIL](https://pypi.org/project/Pillow/)
 * [pyguymer3](https://github.com/Guymer/PyGuymer3)
-* [shapefile](https://pypi.org/project/pyshp)
-* [shapely](https://pypi.org/project/Shapely)
+* [shapefile](https://pypi.org/project/pyshp/)
+* [shapely](https://pypi.org/project/Shapely/)
 
 ## Bugs
 
