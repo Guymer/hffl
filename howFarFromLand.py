@@ -326,7 +326,7 @@ for y, x, title, stub in locs:
     fg.savefig(stub + ".png", bbox_inches = "tight", dpi = dpi, pad_inches = 0.1)
     if not debug:
         pyguymer3.optimize_image(stub + ".png", strip = True)
-    matplotlib.pyplot.close("all")
+    matplotlib.pyplot.close(fg)
 
     # Stop looping if debugging ...
     if debug:
