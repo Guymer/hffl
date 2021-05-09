@@ -19,7 +19,7 @@ except:
     raise Exception("\"geojson\" is not installed; run \"pip install --user geojson\"") from None
 try:
     import matplotlib
-    matplotlib.use("Agg")                                                       # NOTE: https://matplotlib.org/gallery/user_interfaces/canvasagg.html
+    matplotlib.use("Agg")                                                       # NOTE: See https://matplotlib.org/stable/gallery/user_interfaces/canvasagg.html
     import matplotlib.pyplot
 except:
     raise Exception("\"matplotlib\" is not installed; run \"pip install --user matplotlib\"") from None
