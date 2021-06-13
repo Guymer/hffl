@@ -66,7 +66,7 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
     # Loop over Polygons ...
     for poly1 in polys1:
         # Convert from Eastings/Northings to Longitudes/Latitudes ...
-        poly2 = pyguymer3.en2ll(poly1)
+        poly2 = pyguymer3.geo.en2ll(poly1)
         if poly2 is False:
             n += 1                                                              # [#]
             continue

@@ -214,7 +214,7 @@ for y, x, title, stub in locs:
             print("    Buffering for {:.1f} km (saving \"{:s}\") ...".format(0.001 * dist, fname))
 
             # Buffer MultiPolygon ...
-            multipoly = pyguymer3.buffer_multipolygon(multipoly, 500.0, nang = nang, simp = simp, debug = debug)
+            multipoly = pyguymer3.geo.buffer_multipolygon(multipoly, 500.0, nang = nang, simp = simp, debug = debug)
 
             # Save GeoJSON ...
             geojson.dump(
