@@ -30,6 +30,7 @@ except:
 try:
     import shapely
     import shapely.ops
+    import shapely.validation
 except:
     raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
 
@@ -179,10 +180,16 @@ for y, x, title, stub in locs:
 
         print("    Unifying data ...")
 
-        # Create multipolygon ...
+        # Convert list of [Multi]Polygons to (unified) [Multi]Polygon ...
         multipoly = shapely.ops.unary_union(polys)
+
+        # Check [Multi]Polygon ...
         if not multipoly.is_valid:
-            raise Exception("the generated MultiPolygon is not valid") from None
+            raise Exception(f"\"multipoly\" is not a valid [Multi]Polygon ({shapely.validation.explain_validity(multipoly)})") from None
+
+        # Check [Multi]Polygon ...
+        if multipoly.is_empty:
+            raise Exception("\"multipoly\" is an empty [Multi]Polygon") from None
 
         # Save GeoJSON ...
         geojson.dump(

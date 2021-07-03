@@ -38,7 +38,7 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
         # Convert shapefile.Shape to shapely.geometry.polygon.Polygon or
         # shapely.geometry.multipolygon.MultiPolygon ...
         poly1 = shapely.geometry.shape(shapeRecord.shape)
-        if not poly1.is_valid:
+        if not poly1.is_valid or poly1.is_empty:
             n += 1                                                              # [#]
             continue
 
@@ -92,7 +92,7 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
             if poly2.bounds[1] <= ymax + pad and poly2.bounds[3] >= ymin - pad:
                 # Simplify Polygon ...
                 poly3 = poly2.simplify(simp)
-                if not poly3.is_valid:
+                if not poly3.is_valid or poly3.is_empty:
                     n += 1                                                      # [#]
                     continue
 

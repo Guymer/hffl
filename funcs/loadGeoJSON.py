@@ -8,6 +8,7 @@ def loadGeoJSON(fname):
     try:
         import shapely
         import shapely.ops
+        import shapely.validation
     except:
         raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
 
@@ -44,9 +45,10 @@ def loadGeoJSON(fname):
         if len(exteriorRing) <= 2:
             continue
 
-        # Convert external ring to LinearRing and skip if it is not valid ...
+        # Convert external ring to LinearRing and skip if it is not valid or is
+        # empty ...
         exteriorRing = shapely.geometry.polygon.LinearRing(exteriorRing)
-        if not exteriorRing.is_valid:
+        if not exteriorRing.is_valid or exteriorRing.is_empty:
             continue
 
         # Check if there are any interior rings ...
@@ -68,26 +70,32 @@ def loadGeoJSON(fname):
                     continue
 
                 # Convert interior ring to LinearRing and skip if it is not
-                # valid ...
+                # valid or is empty ...
                 interiorRing = shapely.geometry.polygon.LinearRing(interiorRing)
-                if not interiorRing.is_valid:
+                if not interiorRing.is_valid or interiorRing.is_empty:
                     continue
 
                 # Append interior ring to list ...
                 interiorRings.append(interiorRing)
 
-        # Make Polygon and skip if it is not valid ...
+        # Make Polygon and skip if it is not valid or is empty ...
         poly2 = shapely.geometry.polygon.Polygon(exteriorRing, interiorRings)
-        if not poly2.is_valid:
+        if not poly2.is_valid or poly2.is_empty:
             continue
 
         # Append Polygon to list ...
         polys2.append(poly2)
 
-    # Make MulitPolygon ...
+    # Make [Multi]Polygon ...
     multipoly = shapely.geometry.multipolygon.MultiPolygon(polys2)
+
+    # Check [Multi]Polygon ...
     if not multipoly.is_valid:
-        raise Exception("\"multipoly\" is not a valid [Multi]Polygon") from None
+        raise Exception(f"\"multipoly\" is not a valid [Multi]Polygon ({shapely.validation.explain_validity(multipoly)})") from None
+
+    # Check [Multi]Polygon ...
+    if multipoly.is_empty:
+        raise Exception("\"multipoly\" is an empty [Multi]Polygon") from None
 
     # Return answer ...
     return multipoly
