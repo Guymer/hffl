@@ -13,7 +13,8 @@ def loadGeoJSON(fname):
         raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
 
     # Load GeoJSON ...
-    data = geojson.load(open(fname, "rt"))
+    with open(fname, "rt", encoding = "utf-8") as fobj:
+        data = geojson.load(fobj)
 
     # Decide what to do ...
     if data["type"] == "Polygon":

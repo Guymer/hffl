@@ -67,7 +67,8 @@ if __name__ == "__main__":
     cmap = matplotlib.pyplot.get_cmap("jet")
 
     # Load tile metadata ...
-    meta = json.load(open("OrdnanceSurveyBackgroundImages/miniscale.json", "rt"))
+    with open("OrdnanceSurveyBackgroundImages/miniscale.json", "rt", encoding = "utf-8") as fobj:
+        meta = json.load(fobj)
 
     # **************************************************************************
 
@@ -107,7 +108,7 @@ if __name__ == "__main__":
 
     # Loop over locations ...
     for y, x, title, stub in locs:
-        print("Making \"{:s}\" ...".format(stub))
+        print(f"Making \"{stub}\" ...")
 
         # Define bounding box ...
         xmin, xmax, ymin, ymax = x - fov, x + fov, y - fov, y + fov             # [°], [°], [°], [°]
@@ -115,12 +116,12 @@ if __name__ == "__main__":
         # Deduce GeoJSON name and check what needs doing ...
         fname = stub + ".geojson"
         if os.path.exists(fname):
-            print("  Loading \"{:s}\" ...".format(fname))
+            print(f"  Loading \"{fname}\" ...")
 
             # Load GeoJSON ...
             multipoly = funcs.loadGeoJSON(fname)
         else:
-            print("  Saving \"{:s}\" ...".format(fname))
+            print(f"  Saving \"{fname}\" ...")
 
             # Initialize list ...
             polys = []
@@ -195,13 +196,14 @@ if __name__ == "__main__":
                 raise Exception("\"multipoly\" is an empty [Multi]Polygon") from None
 
             # Save GeoJSON ...
-            geojson.dump(
-                multipoly,
-                open(fname, "wt"),
-                ensure_ascii = False,
-                indent = 4,
-                sort_keys = True
-            )
+            with open(fname, "wt", encoding = "utf-8") as fobj:
+                geojson.dump(
+                    multipoly,
+                    fobj,
+                    ensure_ascii = False,
+                          indent = 4,
+                       sort_keys = True,
+                )
 
         # **********************************************************************
 
@@ -216,26 +218,27 @@ if __name__ == "__main__":
             dist += 500.0                                                       # [m]
 
             # Deduce GeoJSON name and check what needs doing ...
-            fname = stub + "{:04.0f}m.geojson".format(dist)
+            fname = f"{stub}{dist:04.0f}m.geojson"
             if os.path.exists(fname):
-                print("    Buffering for {:.1f} km (loading \"{:s}\") ...".format(0.001 * dist, fname))
+                print(f"    Buffering for {0.001 * dist:.1f} km (loading \"{fname}\") ...")
 
                 # Load GeoJSON ...
                 multipoly = funcs.loadGeoJSON(fname)
             else:
-                print("    Buffering for {:.1f} km (saving \"{:s}\") ...".format(0.001 * dist, fname))
+                print(f"    Buffering for {0.001 * dist:.1f} km (saving \"{fname}\") ...")
 
                 # Buffer MultiPolygon ...
                 multipoly = pyguymer3.geo.buffer(multipoly, 500.0, debug = debug, nang = nang, simp = simp)
 
                 # Save GeoJSON ...
-                geojson.dump(
-                    multipoly,
-                    open(fname, "wt"),
-                    ensure_ascii = False,
-                    indent = 4,
-                    sort_keys = True
-                )
+                with open(fname, "wt", encoding = "utf-8") as fobj:
+                    geojson.dump(
+                        multipoly,
+                        fobj,
+                        ensure_ascii = False,
+                              indent = 4,
+                           sort_keys = True,
+                    )
 
     # NOTE: I break the loop here and do it again so that all of the GeoJSON
     #       file are made before any of the PNGs are made. This is because there
@@ -247,7 +250,7 @@ if __name__ == "__main__":
 
     # Loop over locations ...
     for y, x, title, stub in locs:
-        print("Making \"{:s}\" ...".format(stub))
+        print(f"Making \"{stub}\" ...")
 
         # Define bounding box ...
         xmin, xmax, ymin, ymax = x - fov, x + fov, y - fov, y + fov             # [°], [°], [°], [°]
@@ -258,7 +261,7 @@ if __name__ == "__main__":
         fg = matplotlib.pyplot.figure(figsize = (9, 6), dpi = dpi)
         ax = matplotlib.pyplot.axes(projection = cartopy.crs.PlateCarree())
         ax.set_extent([xmin, xmax, ymin, ymax])
-        ax.set_title("Distance From NT & OA Land ({:s})".format(title))
+        ax.set_title(f"Distance From NT & OA Land ({title})")
         if debug:
             ax.coastlines(resolution = "110m", color = "black", linewidth = 0.1)
         else:
@@ -290,7 +293,7 @@ if __name__ == "__main__":
             dist += 500.0                                                       # [m]
 
             # Deduce GeoJSON name ...
-            fname = stub + "{:04.0f}m.geojson".format(dist)
+            fname = f"{stub}{dist:04.0f}m.geojson"
 
             # Load GeoJSON ...
             multipoly = funcs.loadGeoJSON(fname)
@@ -318,7 +321,7 @@ if __name__ == "__main__":
                 raise TypeError("\"multipoly\" is not a [Multi]Polygon")
 
             # Add entries for the legend ...
-            labels.append("{:.1f} km".format(0.001 * dist))
+            labels.append(f"{0.001 * dist:.1f} km")
             lines.append(matplotlib.lines.Line2D([], [], color = cmap(float(i) / 5.0)))
 
         # Draw background image ...

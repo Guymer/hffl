@@ -54,7 +54,7 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
         else:
             raise TypeError("\"poly1\" is not a [Multi]Polygon")
 
-    print("      INFO: {:,d} records were skipped because they were invalid".format(n))
+    print(f"      INFO: {n:,d} records were skipped because they were invalid")
 
     # **************************************************************************
     # *    STEP 2: CONVERT FROM EASTINGS/NORTHINGS TO LONGITUDES/LATITUDES     *
@@ -75,7 +75,7 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
         # Append to list ...
         polys2.append(poly2)
 
-    print("      INFO: {:,d} Polygons could not be converted from Eastings/Northings to Longitudes/Latitudes".format(n))
+    print(f"      INFO: {n:,d} Polygons could not be converted from Eastings/Northings to Longitudes/Latitudes")
 
     # **************************************************************************
     # *                        STEP 3: SIMPLIFY RESULTS                        *
@@ -99,7 +99,7 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
                 # Append to list ...
                 polys3.append(poly3)
 
-    print("      INFO: {:,d} Polygons could not be simplified".format(n))
+    print(f"      INFO: {n:,d} Polygons could not be simplified")
 
     # Return answer ...
     return polys3
