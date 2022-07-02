@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
     # Set number of bearings and degree of simplification ...
     dpi = 300                                                                   # [px/in]
-    nang = 361
+    nang = 361                                                                  # [#]
     simp = 0.0001                                                               # [°]
 
     # Set field-of-view and padding ...
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     debug = False
     if debug:
         dpi = 150                                                               # [px/in]
-        nang = 9
+        nang = 9                                                                # [#]
         simp = 0.1                                                              # [°]
 
     # Create short-hand for the colour map ...
