@@ -114,7 +114,7 @@ if __name__ == "__main__":
         xmin, xmax, ymin, ymax = x - fov, x + fov, y - fov, y + fov             # [°], [°], [°], [°]
 
         # Deduce GeoJSON name and check what needs doing ...
-        fname = stub + ".geojson"
+        fname = f"{stub}.geojson"
         if os.path.exists(fname):
             print(f"  Loading \"{fname}\" ...")
 
@@ -268,7 +268,7 @@ if __name__ == "__main__":
             ax.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
         # Deduce GeoJSON name ...
-        fname = stub + ".geojson"
+        fname = f"{stub}.geojson"
 
         # Load GeoJSON ...
         multipoly = funcs.loadGeoJSON(fname)
@@ -326,21 +326,21 @@ if __name__ == "__main__":
 
         # Draw background image ...
         ax.imshow(
-            matplotlib.pyplot.imread("OrdnanceSurveyBackgroundImages/" + meta["MiniScale_(mono)_R22"]["greyscale"]),
-            cmap = "gray",
-            extent = meta["MiniScale_(relief1)_R22"]["extent"],
+            matplotlib.pyplot.imread(f'OrdnanceSurveyBackgroundImages/{meta["MiniScale_(mono)_R22"]["greyscale"]}'),
+                     cmap = "gray",
+                   extent = meta["MiniScale_(relief1)_R22"]["extent"],
             interpolation = "bicubic",
-            origin = "upper",
-            transform = cartopy.crs.OSGB(),
-            vmin = 0.0,
-            vmax = 1.0
+                   origin = "upper",
+                transform = cartopy.crs.OSGB(),
+                     vmin = 0.0,
+                     vmax = 1.0,
         )
 
         # Add legend and save figure ...
         ax.legend(lines, labels, bbox_to_anchor = (1.0, 0.5), fontsize = "small", ncol = 1)
-        fg.savefig(stub + ".png", bbox_inches = "tight", dpi = dpi, pad_inches = 0.1)
+        fg.savefig(f"{stub}.png", bbox_inches = "tight", dpi = dpi, pad_inches = 0.1)
         if not debug:
-            pyguymer3.image.optimize_image(stub + ".png", strip = True)
+            pyguymer3.image.optimize_image(f"{stub}.png", strip = True)
         matplotlib.pyplot.close(fg)
 
         # Stop looping if debugging ...
