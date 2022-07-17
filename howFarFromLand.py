@@ -259,7 +259,7 @@ if __name__ == "__main__":
 
         # Create figure ...
         fg = matplotlib.pyplot.figure(figsize = (9, 6), dpi = dpi)
-        ax = matplotlib.pyplot.axes(projection = cartopy.crs.PlateCarree())
+        ax = fg.add_subplot(projection = cartopy.crs.PlateCarree())
         ax.set_extent([xmin, xmax, ymin, ymax])
         ax.set_title(f"Distance From NT & OA Land ({title})")
         if debug:
