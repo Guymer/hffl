@@ -8,9 +8,15 @@ def loadGeoJSON(fname):
     try:
         import shapely
         import shapely.ops
-        import shapely.validation
     except:
         raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
+
+    # Import my modules ...
+    try:
+        import pyguymer3
+        import pyguymer3.geo
+    except:
+        raise Exception("\"pyguymer3\" is not installed; you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH") from None
 
     # Load GeoJSON ...
     with open(fname, "rt", encoding = "utf-8") as fobj:
@@ -36,7 +42,7 @@ def loadGeoJSON(fname):
         interiorRings = []
 
         # Loop over coordinates in external ring ...
-        for lon, lat in poly1[0]:
+        for lon, lat in poly1.exterior.coords:
             # Check that the coordinates are not duplicated ...
             if (lon, lat) not in exteriorRing:
                 # Append coordinates to list ...
@@ -55,12 +61,12 @@ def loadGeoJSON(fname):
         # Check if there are any interior rings ...
         if len(poly1) > 1:
             # Loop over interior rings ...
-            for ring in poly1[1:]:
+            for ring in poly1.interiors:
                 # Initialize list ...
                 interiorRing = []
 
                 # Loop over coordinates in interior ring ...
-                for lon, lat in ring:
+                for lon, lat in ring.coords:
                     # Check that the coordinates are not duplicated ...
                     if (lon, lat) not in interiorRing:
                         # Append coordinates to list ...
@@ -89,14 +95,7 @@ def loadGeoJSON(fname):
 
     # Make [Multi]Polygon ...
     multipoly = shapely.geometry.multipolygon.MultiPolygon(polys2)
-
-    # Check [Multi]Polygon ...
-    if not multipoly.is_valid:
-        raise Exception(f"\"multipoly\" is not a valid [Multi]Polygon ({shapely.validation.explain_validity(multipoly)})") from None
-
-    # Check [Multi]Polygon ...
-    if multipoly.is_empty:
-        raise Exception("\"multipoly\" is an empty [Multi]Polygon") from None
+    pyguymer3.geo.check(multipoly)
 
     # Return answer ...
     return multipoly
