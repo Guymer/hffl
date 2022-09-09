@@ -33,7 +33,6 @@ if __name__ == "__main__":
     try:
         import shapely
         import shapely.ops
-        import shapely.validation
     except:
         raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
 
@@ -49,6 +48,7 @@ if __name__ == "__main__":
     # Set number of bearings and degree of simplification ...
     dpi = 300                                                                   # [px/in]
     nang = 361                                                                  # [#]
+    res = "10m"
     simp = 0.0001                                                               # [°]
 
     # Set field-of-view and padding ...
@@ -61,6 +61,7 @@ if __name__ == "__main__":
     if debug:
         dpi = 150                                                               # [px/in]
         nang = 9                                                                # [#]
+        res = "110m"
         simp = 0.1                                                              # [°]
 
     # Create short-hand for the colour map ...
@@ -186,14 +187,7 @@ if __name__ == "__main__":
 
             # Convert list of [Multi]Polygons to (unified) [Multi]Polygon ...
             multipoly = shapely.ops.unary_union(polys)
-
-            # Check [Multi]Polygon ...
-            if not multipoly.is_valid:
-                raise Exception(f"\"multipoly\" is not a valid [Multi]Polygon ({shapely.validation.explain_validity(multipoly)})") from None
-
-            # Check [Multi]Polygon ...
-            if multipoly.is_empty:
-                raise Exception("\"multipoly\" is an empty [Multi]Polygon") from None
+            pyguymer3.geo.check(multipoly)
 
             # Save GeoJSON ...
             with open(fname, "wt", encoding = "utf-8") as fobj:
@@ -228,7 +222,13 @@ if __name__ == "__main__":
                 print(f"    Buffering for {0.001 * dist:.1f} km (saving \"{fname}\") ...")
 
                 # Buffer MultiPolygon ...
-                multipoly = pyguymer3.geo.buffer(multipoly, 500.0, debug = debug, nang = nang, simp = simp)
+                multipoly = pyguymer3.geo.buffer(
+                    multipoly,
+                    500.0,
+                    debug = debug,
+                     nang = nang,
+                     simp = simp,
+                )
 
                 # Save GeoJSON ...
                 with open(fname, "wt", encoding = "utf-8") as fobj:
@@ -259,13 +259,18 @@ if __name__ == "__main__":
 
         # Create figure ...
         fg = matplotlib.pyplot.figure(figsize = (9, 6), dpi = dpi)
+
+        # Create axis ...
         ax = fg.add_subplot(projection = cartopy.crs.PlateCarree())
+
+        # Configure axis ...
+        ax.coastlines(
+                 color = "black",
+             linewidth = 0.1,
+            resolution = res,
+        )
         ax.set_extent([xmin, xmax, ymin, ymax])
         ax.set_title(f"Distance From NT & OA Land ({title})")
-        if debug:
-            ax.coastlines(resolution = "110m", color = "black", linewidth = 0.1)
-        else:
-            ax.coastlines(resolution = "10m", color = "black", linewidth = 0.1)
 
         # Deduce GeoJSON name ...
         fname = f"{stub}.geojson"
@@ -275,9 +280,9 @@ if __name__ == "__main__":
 
         # Draw data ...
         ax.add_geometries(
-            multipoly,
+            pyguymer3.geo.extract_polys(multipoly),
             cartopy.crs.PlateCarree(),
-            alpha = 1.0,
+                alpha = 1.0,
             edgecolor = "none",
             facecolor = "red",
         )
@@ -299,26 +304,14 @@ if __name__ == "__main__":
             multipoly = funcs.loadGeoJSON(fname)
 
             # Draw data ...
-            if isinstance(multipoly, shapely.geometry.polygon.Polygon):
-                ax.add_geometries(
-                    [multipoly],
-                    cartopy.crs.PlateCarree(),
+            ax.add_geometries(
+                pyguymer3.geo.extract_polys(multipoly),
+                cartopy.crs.PlateCarree(),
                     alpha = 1.0,
-                    edgecolor = cmap(float(i) / 5.0),
-                    facecolor = "none",
-                    linewidth = 1.0
-                )
-            elif isinstance(multipoly, shapely.geometry.multipolygon.MultiPolygon):
-                ax.add_geometries(
-                    multipoly,
-                    cartopy.crs.PlateCarree(),
-                    alpha = 1.0,
-                    edgecolor = cmap(float(i) / 5.0),
-                    facecolor = "none",
-                    linewidth = 1.0
-                )
-            else:
-                raise TypeError("\"multipoly\" is not a [Multi]Polygon")
+                edgecolor = cmap(float(i) / 5.0),
+                facecolor = "none",
+                linewidth = 1.0,
+            )
 
             # Add entries for the legend ...
             labels.append(f"{0.001 * dist:.1f} km")
@@ -336,12 +329,28 @@ if __name__ == "__main__":
                      vmax = 1.0,
         )
 
-        # Add legend and save figure ...
-        ax.legend(lines, labels, bbox_to_anchor = (1.0, 0.5), fontsize = "small", ncol = 1)
-        fg.savefig(f"{stub}.png", bbox_inches = "tight", dpi = dpi, pad_inches = 0.1)
-        if not debug:
-            pyguymer3.image.optimize_image(f"{stub}.png", strip = True)
+        # Configure axis ...
+        ax.legend(
+            lines,
+            labels,
+            bbox_to_anchor = (1.0, 0.5),
+                  fontsize = "small",
+                      ncol = 1,
+        )
+
+        # Configure figure ...
+        fg.tight_layout()
+
+        # Save figure ...
+        fg.savefig(
+            f"{stub}.png",
+                   dpi = dpi,
+            pad_inches = 0.1,
+        )
         matplotlib.pyplot.close(fg)
+
+        # Optimize PNG ...
+        pyguymer3.image.optimize_image(f"{stub}.png", strip = True)
 
         # Stop looping if debugging ...
         if debug:
