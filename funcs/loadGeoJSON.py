@@ -8,6 +8,7 @@ def loadGeoJSON(fname):
     try:
         import shapely
         import shapely.ops
+        import shapely.validation
     except:
         raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
 
@@ -55,7 +56,10 @@ def loadGeoJSON(fname):
         # Convert external ring to LinearRing and skip if it is not valid or is
         # empty ...
         exteriorRing = shapely.geometry.polygon.LinearRing(exteriorRing)
-        if not exteriorRing.is_valid or exteriorRing.is_empty:
+        if not exteriorRing.is_valid:
+            print(f"WARNING: Skipping an exterior ring as it is not valid ({shapely.validation.explain_validity(exteriorRing)}).")
+            continue
+        if exteriorRing.is_empty:
             continue
 
         # Check if there are any interior rings ...
@@ -79,7 +83,10 @@ def loadGeoJSON(fname):
                 # Convert interior ring to LinearRing and skip if it is not
                 # valid or is empty ...
                 interiorRing = shapely.geometry.polygon.LinearRing(interiorRing)
-                if not interiorRing.is_valid or interiorRing.is_empty:
+                if not interiorRing.is_valid:
+                    print(f"WARNING: Skipping an interior ring as it is not valid ({shapely.validation.explain_validity(interiorRing)}).")
+                    continue
+                if interiorRing.is_empty:
                     continue
 
                 # Append interior ring to list ...
@@ -87,7 +94,10 @@ def loadGeoJSON(fname):
 
         # Make Polygon and skip if it is not valid or is empty ...
         poly2 = shapely.geometry.polygon.Polygon(exteriorRing, interiorRings)
-        if not poly2.is_valid or poly2.is_empty:
+        if not poly2.is_valid:
+            print(f"WARNING: Skipping a polygon as it is not valid ({shapely.validation.explain_validity(poly2)}).")
+            continue
+        if poly2.is_empty:
             continue
 
         # Append Polygon to list ...
