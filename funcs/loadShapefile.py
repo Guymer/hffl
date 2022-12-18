@@ -1,4 +1,4 @@
-def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
+def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, kwArgCheck = None, simp = 0.1):
     # Import special modules ...
     try:
         import shapefile
@@ -17,6 +17,10 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = 0.1):
         import pyguymer3.geo
     except:
         raise Exception("\"pyguymer3\" is not installed; you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH") from None
+
+    # Check keyword arguments ...
+    if kwArgCheck is not None:
+        print(f"WARNING: \"{__name__}\" has been called with an extra positional argument")
 
     # Check argument ...
     if not isinstance(sfObj, shapefile.Reader):
