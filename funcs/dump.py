@@ -11,11 +11,11 @@ def dump(poly):
         raise TypeError("\"poly\" is not a Polygon")
 
     # Open CSV file ...
-    with open("error.csv", "wt", encoding = "utf-8") as fobj:
+    with open("error.csv", "wt", encoding = "utf-8") as fObj:
         # Write header ...
-        fobj.write("lon [°],lat [°]\n")
+        fObj.write("lon [°],lat [°]\n")
 
         # Loop over coordinates in external ring ...
         for lon, lat in poly.exterior.coords:
             # Write data ...
-            fobj.write(f"{lon:.15e},{lat:.15e}\n")
+            fObj.write(f"{lon:.15e},{lat:.15e}\n")

@@ -69,8 +69,8 @@ if __name__ == "__main__":
     cmap = matplotlib.pyplot.get_cmap("jet")
 
     # Load tile metadata ...
-    with open("OrdnanceSurveyBackgroundImages/miniscale.json", "rt", encoding = "utf-8") as fobj:
-        meta = json.load(fobj)
+    with open("OrdnanceSurveyBackgroundImages/miniscale.json", "rt", encoding = "utf-8") as fObj:
+        meta = json.load(fObj)
 
     # **************************************************************************
 
@@ -191,10 +191,10 @@ if __name__ == "__main__":
             pyguymer3.geo.check(multipoly)
 
             # Save GeoJSON ...
-            with open(fname, "wt", encoding = "utf-8") as fobj:
+            with open(fname, "wt", encoding = "utf-8") as fObj:
                 geojson.dump(
                     multipoly,
-                    fobj,
+                    fObj,
                     ensure_ascii = False,
                           indent = 4,
                        sort_keys = True,
@@ -232,10 +232,10 @@ if __name__ == "__main__":
                 )
 
                 # Save GeoJSON ...
-                with open(fname, "wt", encoding = "utf-8") as fobj:
+                with open(fname, "wt", encoding = "utf-8") as fObj:
                     geojson.dump(
                         multipoly,
-                        fobj,
+                        fObj,
                         ensure_ascii = False,
                               indent = 4,
                            sort_keys = True,

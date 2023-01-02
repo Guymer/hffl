@@ -20,8 +20,8 @@ def loadGeoJSON(fname):
         raise Exception("\"pyguymer3\" is not installed; you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH") from None
 
     # Load GeoJSON ...
-    with open(fname, "rt", encoding = "utf-8") as fobj:
-        data = geojson.load(fobj)
+    with open(fname, "rt", encoding = "utf-8") as fObj:
+        data = geojson.load(fObj)
 
     # Decide what to do ...
     if data["type"] == "Polygon":
