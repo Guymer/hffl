@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+# Define function ...
 def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, kwArgCheck = None, simp = 0.1):
     # Import special modules ...
     try:

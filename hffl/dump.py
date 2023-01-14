@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+# Define function ...
 def dump(poly):
     # Import special modules ...
     try:
