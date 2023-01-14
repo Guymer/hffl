@@ -38,7 +38,7 @@ if __name__ == "__main__":
         raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
 
     # Import my modules ...
-    import funcs
+    import hffl
     try:
         import pyguymer3
         import pyguymer3.geo
@@ -121,7 +121,7 @@ if __name__ == "__main__":
             print(f"  Loading \"{fname}\" ...")
 
             # Load GeoJSON ...
-            multipoly = funcs.loadGeoJSON(fname)
+            multipoly = hffl.loadGeoJSON(fname)
         else:
             print(f"  Saving \"{fname}\" ...")
 
@@ -144,7 +144,7 @@ if __name__ == "__main__":
                 sfObj = shapefile.Reader(dbf = dbfObj, shp = shpObj, shx = shxObj)
 
                 # Load all [Multi]Polygons from the shapefile ...
-                polys += funcs.loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = simp)
+                polys += hffl.loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = simp)
 
             # ******************************************************************
 
@@ -162,7 +162,7 @@ if __name__ == "__main__":
                 sfObj = shapefile.Reader(dbf = dbfObj, shp = shpObj, shx = shxObj)
 
                 # Load all [Multi]Polygons from the shapefile ...
-                polys += funcs.loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = simp)
+                polys += hffl.loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = simp)
 
             # ******************************************************************
 
@@ -180,7 +180,7 @@ if __name__ == "__main__":
                 sfObj = shapefile.Reader(dbf = dbfObj, shp = shpObj, shx = shxObj)
 
                 # Load all [Multi]Polygons from the shapefile ...
-                polys += funcs.loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = simp)
+                polys += hffl.loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, simp = simp)
 
             # ******************************************************************
 
@@ -218,7 +218,7 @@ if __name__ == "__main__":
                 print(f"    Buffering for {0.001 * dist:.1f} km (loading \"{fname}\") ...")
 
                 # Load GeoJSON ...
-                multipoly = funcs.loadGeoJSON(fname)
+                multipoly = hffl.loadGeoJSON(fname)
             else:
                 print(f"    Buffering for {0.001 * dist:.1f} km (saving \"{fname}\") ...")
 
@@ -277,7 +277,7 @@ if __name__ == "__main__":
         fname = f"{stub}.geojson"
 
         # Load GeoJSON ...
-        multipoly = funcs.loadGeoJSON(fname)
+        multipoly = hffl.loadGeoJSON(fname)
 
         # Draw data ...
         ax.add_geometries(
@@ -302,7 +302,7 @@ if __name__ == "__main__":
             fname = f"{stub}{dist:04.0f}m.geojson"
 
             # Load GeoJSON ...
-            multipoly = funcs.loadGeoJSON(fname)
+            multipoly = hffl.loadGeoJSON(fname)
 
             # Draw data ...
             ax.add_geometries(
