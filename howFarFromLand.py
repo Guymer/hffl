@@ -75,28 +75,24 @@ if __name__ == "__main__":
     # **************************************************************************
 
     # Start session ...
-    sess = pyguymer3.start_session()
+    with pyguymer3.start_session() as sess:
+        # Download dataset if it is missing ...
+        fname = "alwaysOpen.zip"
+        if not os.path.exists(fname):
+            url = "https://opendata.arcgis.com/datasets/202ec400dfe9471aaf257e4b6c956394_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+            pyguymer3.download_file(sess, url, fname)
 
-    # Download dataset if it is missing ...
-    fname = "alwaysOpen.zip"
-    if not os.path.exists(fname):
-        url = "https://opendata.arcgis.com/datasets/202ec400dfe9471aaf257e4b6c956394_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
-        pyguymer3.download_file(sess, url, fname)
+        # Download dataset if it is missing ...
+        fname = "limitedAccess.zip"
+        if not os.path.exists(fname):
+            url = "https://opendata.arcgis.com/datasets/f3cd21fd165e4e3498a83973bb5ba82f_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+            pyguymer3.download_file(sess, url, fname)
 
-    # Download dataset if it is missing ...
-    fname = "limitedAccess.zip"
-    if not os.path.exists(fname):
-        url = "https://opendata.arcgis.com/datasets/f3cd21fd165e4e3498a83973bb5ba82f_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
-        pyguymer3.download_file(sess, url, fname)
-
-    # Download dataset if it is missing ...
-    fname = "openAccess.zip"
-    if not os.path.exists(fname):
-        url = "https://opendata.arcgis.com/datasets/6ce15f2cd06c4536983d315694dad16b_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
-        pyguymer3.download_file(sess, url, fname)
-
-    # Close session ...
-    sess.close()
+        # Download dataset if it is missing ...
+        fname = "openAccess.zip"
+        if not os.path.exists(fname):
+            url = "https://opendata.arcgis.com/datasets/6ce15f2cd06c4536983d315694dad16b_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
+            pyguymer3.download_file(sess, url, fname)
 
     # **************************************************************************
 
