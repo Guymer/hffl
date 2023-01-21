@@ -22,9 +22,14 @@ if __name__ == "__main__":
         raise Exception("\"geojson\" is not installed; run \"pip install --user geojson\"") from None
     try:
         import matplotlib
-        matplotlib.use("Agg")                                                   # NOTE: See https://matplotlib.org/stable/gallery/user_interfaces/canvasagg.html
+        matplotlib.rcParams.update(
+            {
+                   "backend" : "Agg",                                           # NOTE: See https://matplotlib.org/stable/gallery/user_interfaces/canvasagg.html
+                "figure.dpi" : 300,
+                 "font.size" : 8,
+            }
+        )
         import matplotlib.pyplot
-        matplotlib.pyplot.rcParams.update({"font.size" : 8})
     except:
         raise Exception("\"matplotlib\" is not installed; run \"pip install --user matplotlib\"") from None
     try:
@@ -47,7 +52,6 @@ if __name__ == "__main__":
         raise Exception("\"pyguymer3\" is not installed; you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH") from None
 
     # Set number of bearings and degree of simplification ...
-    dpi = 300                                                                   # [px/in]
     nang = 361                                                                  # [#]
     res = "10m"
     simp = 0.0001                                                               # [°]
@@ -60,7 +64,6 @@ if __name__ == "__main__":
     # simplification (if needed) ...
     debug = False
     if debug:
-        dpi = 150                                                               # [px/in]
         nang = 9                                                                # [#]
         res = "110m"
         simp = 0.1                                                              # [°]
@@ -255,7 +258,7 @@ if __name__ == "__main__":
         print("  Plotting data ...")
 
         # Create figure ...
-        fg = matplotlib.pyplot.figure(figsize = (9, 6), dpi = dpi)
+        fg = matplotlib.pyplot.figure(figsize = (9, 6))
 
         # Create axis ...
         ax = fg.add_subplot(projection = cartopy.crs.PlateCarree())
@@ -339,11 +342,7 @@ if __name__ == "__main__":
         fg.tight_layout()
 
         # Save figure ...
-        fg.savefig(
-            f"{stub}.png",
-                   dpi = dpi,
-            pad_inches = 0.1,
-        )
+        fg.savefig(f"{stub}.png")
         matplotlib.pyplot.close(fg)
 
         # Optimize PNG ...
