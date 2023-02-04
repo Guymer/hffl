@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Define function ...
-def loadGeoJSON(fname):
+def loadGeoJSON(fname, /):
     # Import special modules ...
     try:
         import geojson
