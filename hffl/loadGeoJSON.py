@@ -10,6 +10,7 @@ def loadGeoJSON(fname, /):
         raise Exception("\"geojson\" is not installed; run \"pip install --user geojson\"") from None
     try:
         import shapely
+        import shapely.geometry
         import shapely.ops
         import shapely.validation
     except:
@@ -22,41 +23,32 @@ def loadGeoJSON(fname, /):
     except:
         raise Exception("\"pyguymer3\" is not installed; you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH") from None
 
-    # Load GeoJSON ...
+    # Load the GeoJSON shape(s) and convert it to a Shapely shape(s) ...
     with open(fname, "rt", encoding = "utf-8") as fObj:
-        data = geojson.load(fObj)
-
-    # Decide what to do ...
-    if data["type"] == "Polygon":
-        # Make list containing single Polygon ...
-        polys1 = [data["coordinates"]]
-    elif data["type"] == "MultiPolygon":
-        # Make list containing all Polygons ...
-        polys1 = data["coordinates"]
-    else:
-        raise Exception("geometry not supported") from None
+        shapes = geojson.load(fObj)
+    shapes = shapely.geometry.shape(shapes)
 
     # Initialize list ...
     polys2 = []
 
-    # Loop over polygons ...
-    for poly1 in polys1:
+    # Loop over Polygons ...
+    for poly1 in pyguymer3.geo.extract_polys(shapes):
         # Initialize lists ...
         exteriorRing = []
         interiorRings = []
 
-        # Loop over coordinates in external ring ...
+        # Loop over coordinates in exterior ring ...
         for lon, lat in poly1.exterior.coords:
             # Check that the coordinates are not duplicated ...
             if (lon, lat) not in exteriorRing:
                 # Append coordinates to list ...
                 exteriorRing.append((lon, lat))
 
-        # Skip this polygon if the external ring is not atleast a triangle ...
+        # Skip this polygon if the exterior ring is not atleast a triangle ...
         if len(exteriorRing) <= 2:
             continue
 
-        # Convert external ring to LinearRing and skip if it is not valid or is
+        # Convert exterior ring to LinearRing and skip if it is not valid or is
         # empty ...
         exteriorRing = shapely.geometry.polygon.LinearRing(exteriorRing)
         if not exteriorRing.is_valid:
@@ -66,7 +58,7 @@ def loadGeoJSON(fname, /):
             continue
 
         # Check if there are any interior rings ...
-        if len(poly1) > 1:
+        if len(poly1.interiors) > 1:
             # Loop over interior rings ...
             for ring in poly1.interiors:
                 # Initialize list ...
@@ -107,7 +99,7 @@ def loadGeoJSON(fname, /):
         polys2.append(poly2)
 
     # Make [Multi]Polygon ...
-    multipoly = shapely.geometry.multipolygon.MultiPolygon(polys2)
+    multipoly = shapely.ops.unary_union(polys2)
     pyguymer3.geo.check(multipoly)
 
     # Return answer ...
