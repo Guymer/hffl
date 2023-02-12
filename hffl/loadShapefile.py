@@ -9,6 +9,7 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, /, *, simp = 0.1):
         raise Exception("\"shapefile\" is not installed; run \"pip install --user pyshp\"") from None
     try:
         import shapely
+        import shapely.geometry
         import shapely.ops
         import shapely.validation
     except:
