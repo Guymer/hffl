@@ -252,25 +252,21 @@ if __name__ == "__main__":
     for y, x, title, stub in locs:
         print(f"Making \"{stub}\" ...")
 
-        # Define bounding box ...
-        xmin, xmax, ymin, ymax = x - fov, x + fov, y - fov, y + fov             # [°], [°], [°], [°]
-
         print("  Plotting data ...")
 
         # Create figure ...
         fg = matplotlib.pyplot.figure(figsize = (9, 6))
 
         # Create axis ...
-        ax = fg.add_subplot(projection = cartopy.crs.PlateCarree())
+        ax = pyguymer3.geo.add_top_down_axis(
+            fg,
+            x,
+            y,
+            30.0e3,
+        )
 
         # Configure axis ...
-        ax.coastlines(
-                 color = "black",
-             linewidth = 0.1,
-            resolution = res,
-        )
-        ax.set_extent([xmin, xmax, ymin, ymax])
-        ax.set_title(f"Distance From NT & OA Land ({title})")
+        pyguymer3.geo.add_coastlines(ax, resolution = "i")
 
         # Deduce GeoJSON name ...
         fname = f"{stub}.geojson"
@@ -337,6 +333,7 @@ if __name__ == "__main__":
                   fontsize = "small",
                       ncol = 1,
         )
+        ax.set_title(f"Distance From NT & OA Land ({title})")
 
         # Configure figure ...
         fg.tight_layout()
