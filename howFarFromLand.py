@@ -12,7 +12,6 @@ if __name__ == "__main__":
     # Import special modules ...
     try:
         import cartopy
-        import cartopy.crs
     except:
         raise Exception("\"cartopy\" is not installed; run \"pip install --user Cartopy\"") from None
     try:
