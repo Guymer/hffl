@@ -328,9 +328,8 @@ if __name__ == "__main__":
         ax.legend(
             lines,
             labels,
-            bbox_to_anchor = (1.0, 0.5),
-                  fontsize = "small",
-                      ncol = 1,
+             loc = "upper right",
+            ncol = 1,
         )
         ax.set_title(f"Distance From NT & OA Land ({title})")
 
