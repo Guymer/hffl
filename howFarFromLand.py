@@ -4,6 +4,7 @@
 # NOTE: See https://docs.python.org/3.11/library/multiprocessing.html#the-spawn-and-forkserver-start-methods
 if __name__ == "__main__":
     # Import standard modules ...
+    import argparse
     import io
     import json
     import os
@@ -51,6 +52,23 @@ if __name__ == "__main__":
     except:
         raise Exception("\"pyguymer3\" is not installed; you need to have the Python module from https://github.com/Guymer/PyGuymer3 located somewhere in your $PYTHONPATH") from None
 
+    # **************************************************************************
+
+    # Create argument parser and parse the arguments ...
+    parser = argparse.ArgumentParser(
+           allow_abbrev = False,
+            description = "HFFL: this project aims to show how far away you are from National Trust or Open Access land.",
+        formatter_class = argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--debug",
+        action = "store_true",
+          help = "print debug messages",
+    )
+    args = parser.parse_args()
+
+    # **************************************************************************
+
     # Set number of bearings and degree of simplification ...
     nang = 361                                                                  # [#]
     res = "10m"
@@ -60,10 +78,9 @@ if __name__ == "__main__":
     fov = 0.5                                                                   # [°]
     pad = 0.1                                                                   # [°]
 
-    # Set mode and use it to override number of bearings and degree of
-    # simplification (if needed) ...
-    debug = False
-    if debug:
+    # Use mode to override number of bearings and degree of simplification (if
+    # needed) ...
+    if args.debug:
         nang = 9                                                                # [#]
         res = "110m"
         simp = 0.1                                                              # [°]
@@ -225,7 +242,7 @@ if __name__ == "__main__":
                 multipoly = pyguymer3.geo.buffer(
                     multipoly,
                     500.0,
-                    debug = debug,
+                    debug = args.debug,
                      nang = nang,
                      simp = simp,
                 )
@@ -345,5 +362,5 @@ if __name__ == "__main__":
         pyguymer3.image.optimize_image(f"{stub}.png", strip = True)
 
         # Stop looping if debugging ...
-        if debug:
+        if args.debug:
             break
