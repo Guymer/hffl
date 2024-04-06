@@ -284,7 +284,7 @@ if __name__ == "__main__":
             fg,
             x,
             y,
-            30.0e3,
+            dist = 30.0e3,
         )
 
         # Configure axis ...
