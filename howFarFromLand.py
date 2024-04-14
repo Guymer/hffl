@@ -287,9 +287,6 @@ if __name__ == "__main__":
              lon = x,
         )
 
-        # Configure axis ...
-        pyguymer3.geo.add_coastlines(ax)
-
         # Deduce GeoJSON name ...
         fname = f"{stub}.geojson"
 
