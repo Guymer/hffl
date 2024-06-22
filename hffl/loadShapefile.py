@@ -52,16 +52,18 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, /, *, simp = 0.1):
             continue
 
         # Check if it is a [Multi]Polygon ...
-        if isinstance(poly1, shapely.geometry.polygon.Polygon):
-            # Append to list ...
-            polys1.append(poly1)
-        elif isinstance(poly1, shapely.geometry.multipolygon.MultiPolygon):
-            # Loop over Polygons ...
-            for poly2 in poly1.geoms:
+        match poly1:
+            case shapely.geometry.polygon.Polygon():
                 # Append to list ...
-                polys1.append(poly2)
-        else:
-            raise TypeError("\"poly1\" is not a [Multi]Polygon")
+                polys1.append(poly1)
+            case shapely.geometry.multipolygon.MultiPolygon():
+                # Loop over Polygons ...
+                for poly2 in poly1.geoms:
+                    # Append to list ...
+                    polys1.append(poly2)
+            case _:
+                # Crash
+                raise TypeError(f"\"poly1\" is an unexpected type ({repr(type(poly1))})") from None
 
     print(f"      INFO: {n:,d} records were skipped because they were invalid")
 
