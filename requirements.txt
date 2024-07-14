@@ -5,5 +5,5 @@ pillow
 cartopy
 geojson
 matplotlib
-shapefile
+pyshp
 shapely
