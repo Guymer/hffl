@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 
 # Define function ...
-def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, /, *, simp = 0.1):
+def loadShapefile(
+    sfObj,
+    xmin,
+    xmax,
+    ymin,
+    ymax,
+    pad,
+    /,
+    *,
+    debug = __debug__,
+     simp = 0.1,
+):
     # Import special modules ...
     try:
         import shapefile
@@ -78,7 +89,10 @@ def loadShapefile(sfObj, xmin, xmax, ymin, ymax, pad, /, *, simp = 0.1):
     # Loop over Polygons ...
     for poly1 in polys1:
         # Convert from Eastings/Northings to Longitudes/Latitudes ...
-        poly2 = pyguymer3.geo.en2ll(poly1)
+        poly2 = pyguymer3.geo.en2ll(
+            poly1,
+            debug = debug,
+        )
         if poly2 is False:
             n += 1                                                              # [#]
             continue

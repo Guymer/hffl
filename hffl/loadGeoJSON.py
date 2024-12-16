@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 
 # Define function ...
-def loadGeoJSON(fname, /):
+def loadGeoJSON(
+    fname,
+    /,
+    *,
+    onlyValid = False,
+       repair = False,
+):
     # Import special modules ...
     try:
         import geojson
@@ -32,7 +38,11 @@ def loadGeoJSON(fname, /):
     polys2 = []
 
     # Loop over Polygons ...
-    for poly1 in pyguymer3.geo.extract_polys(shapes):
+    for poly1 in pyguymer3.geo.extract_polys(
+        shapes,
+        onlyValid = onlyValid,
+           repair = repair,
+    ):
         # Initialize lists ...
         exteriorRing = []
         interiorRings = []

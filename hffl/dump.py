@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
 # Define function ...
-def dump(poly, /):
+def dump(
+    poly,
+    /,
+):
     # Import special modules ...
     try:
         import shapely
