@@ -75,7 +75,7 @@ if __name__ == "__main__":
     # **************************************************************************
 
     # Set number of bearings and degree of simplification ...
-    nang = 361                                                                  # [#]
+    nAng = 361                                                                  # [#]
     res = "10m"
     simp = 0.0001                                                               # [°]
 
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     # Use mode to override number of bearings and degree of simplification (if
     # needed) ...
     if args.debug:
-        nang = 9                                                                # [#]
+        nAng = 9                                                                # [#]
         res = "110m"
         simp = 0.1                                                              # [°]
 
@@ -248,7 +248,7 @@ if __name__ == "__main__":
                     multipoly,
                     500.0,
                     debug = args.debug,
-                     nang = nang,
+                     nAng = nAng,
                      simp = simp,
                 )
 
