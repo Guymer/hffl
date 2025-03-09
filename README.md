@@ -1,5 +1,7 @@
 # How Far From Land (HFFL)
 
+!["mypy" GitHub Action Status](https://github.com/Guymer/hffl/actions/workflows/mypy.yaml/badge.svg) !["pylint" GitHub Action Status](https://github.com/Guymer/hffl/actions/workflows/pylint.yaml/badge.svg)
+
 This project aims to show how far away you are from National Trust or Open Access land.
 
 ## Dependencies
