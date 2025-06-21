@@ -70,6 +70,12 @@ if __name__ == "__main__":
         action = "store_true",
           help = "print debug messages",
     )
+    parser.add_argument(
+        "--timeout",
+        default = 60.0,
+           help = "the timeout for any requests/subprocess calls (in seconds)",
+           type = float,
+    )
     args = parser.parse_args()
 
     # **************************************************************************
@@ -91,7 +97,7 @@ if __name__ == "__main__":
         simp = 0.1                                                              # [°]
 
     # Create short-hand for the colour map ...
-    cmap = matplotlib.pyplot.get_cmap("jet")
+    cmap = matplotlib.colormaps["turbo"]
 
     # Load tile metadata ...
     with open("OrdnanceSurveyBackgroundImages/miniscale.json", "rt", encoding = "utf-8") as fObj:
@@ -105,19 +111,37 @@ if __name__ == "__main__":
         fname = "alwaysOpen.zip"
         if not os.path.exists(fname):
             url = "https://opendata.arcgis.com/datasets/202ec400dfe9471aaf257e4b6c956394_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
-            pyguymer3.download_file(sess, url, fname)
+            pyguymer3.download_file(
+                sess,
+                url,
+                fname,
+                  debug = args.debug,
+                timeout = args.timeout,
+            )
 
         # Download dataset if it is missing ...
         fname = "limitedAccess.zip"
         if not os.path.exists(fname):
             url = "https://opendata.arcgis.com/datasets/f3cd21fd165e4e3498a83973bb5ba82f_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
-            pyguymer3.download_file(sess, url, fname)
+            pyguymer3.download_file(
+                sess,
+                url,
+                fname,
+                  debug = args.debug,
+                timeout = args.timeout,
+            )
 
         # Download dataset if it is missing ...
         fname = "openAccess.zip"
         if not os.path.exists(fname):
             url = "https://opendata.arcgis.com/datasets/6ce15f2cd06c4536983d315694dad16b_0.zip?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D"
-            pyguymer3.download_file(sess, url, fname)
+            pyguymer3.download_file(
+                sess,
+                url,
+                fname,
+                  debug = args.debug,
+                timeout = args.timeout,
+            )
 
     # **************************************************************************
 
@@ -282,9 +306,10 @@ if __name__ == "__main__":
         # Create axis ...
         ax = pyguymer3.geo.add_axis(
             fg,
-            dist = 30.0e3,
-             lat = y,
-             lon = x,
+            debug = args.debug,
+             dist = 30.0e3,
+              lat = y,
+              lon = x,
         )
 
         # Deduce GeoJSON name ...
@@ -361,7 +386,12 @@ if __name__ == "__main__":
         matplotlib.pyplot.close(fg)
 
         # Optimize PNG ...
-        pyguymer3.image.optimize_image(f"{stub}.png", strip = True)
+        pyguymer3.image.optimize_image(
+            f"{stub}.png",
+              debug = args.debug,
+              strip = True,
+            timeout = args.timeout,
+        )
 
         # Stop looping if debugging ...
         if args.debug:
