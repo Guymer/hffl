@@ -4,6 +4,6 @@
 cartopy
 geojson
 matplotlib
-pyguymer3
+pyguymer3 >= 0.0.9
 pyshp
 shapely
