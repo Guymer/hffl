@@ -16,7 +16,7 @@ if __name__ == "__main__":
         import cartopy
         cartopy.config.update(
             {
-                "cache_dir" : pathlib.PosixPath("~/.local/share/cartopy_cache").expanduser(),
+                "cache_dir" : pathlib.PosixPath("~/.local/share/cartopy").expanduser(),
             }
         )
     except:
@@ -320,7 +320,7 @@ if __name__ == "__main__":
 
         # Draw data ...
         ax.add_geometries(
-            pyguymer3.geo.extract_polys(multipoly),
+            pyguymer3.geo.extract_polys(multipoly, onlyValid = True, repair = True),
             cartopy.crs.PlateCarree(),
                 alpha = 1.0,
             edgecolor = "none",
@@ -345,7 +345,7 @@ if __name__ == "__main__":
 
             # Draw data ...
             ax.add_geometries(
-                pyguymer3.geo.extract_polys(multipoly),
+                pyguymer3.geo.extract_polys(multipoly, onlyValid = True, repair = True),
                 cartopy.crs.PlateCarree(),
                     alpha = 1.0,
                 edgecolor = cmap(float(i) / 5.0),
@@ -357,6 +357,13 @@ if __name__ == "__main__":
             labels.append(f"{0.001 * dist:.1f} km")
             lines.append(matplotlib.lines.Line2D([], [], color = cmap(float(i) / 5.0)))
 
+        # Calculate the regrid shape based off the resolution and size of the
+        # figure, as well as a safety factor (remembering Nyquist) ...
+        regrid_shape = (
+            round(2.0 * fg.dpi * fg.get_size_inches()[0]),
+            round(2.0 * fg.dpi * fg.get_size_inches()[1]),
+        )                                                                       # [px], [px]
+
         # Draw background image ...
         ax.imshow(
             matplotlib.pyplot.imread(f'OrdnanceSurveyBackgroundImages/{meta["MiniScale_(mono)_R22"]["greyscale"]}'),
@@ -364,6 +371,7 @@ if __name__ == "__main__":
                    extent = meta["MiniScale_(relief1)_R22"]["extent"],
             interpolation = "bicubic",
                    origin = "upper",
+             regrid_shape = regrid_shape,
                 transform = cartopy.crs.OSGB(),
                      vmin = 0.0,
                      vmax = 1.0,
