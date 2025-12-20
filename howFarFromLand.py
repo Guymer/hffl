@@ -349,14 +349,14 @@ if __name__ == "__main__":
                repair = True,
         )
 
-        # Extract data and buffer it by 10 metres to smooth out any kinks (it
+        # Extract data and buffer it by 50 metres to smooth out any kinks (it
         # appears that Cartopy has difficulty drawing some of the Polygons and
         # Cartopy just paints the entire map red - as of 20/Dec/2025, I have
         # been unable to figure out which Polygon it is) ...
         polys = pyguymer3.geo.extract_polys(
             pyguymer3.geo.buffer(
                 multipoly.intersection(fovPoly),
-                10.0,
+                50.0,
                 debug = args.debug,
                  nAng = nAng,
                  simp = simp,
