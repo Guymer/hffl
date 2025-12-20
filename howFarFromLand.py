@@ -87,9 +87,9 @@ if __name__ == "__main__":
     res = "10m"
     simp = 0.0001                                                               # [°]
 
-    # Set field-of-view and padding ...
-    fov = 0.5                                                                   # [°]
+    # Set padding and region-of-interest ...
     pad = 0.1                                                                   # [°]
+    roi = 0.5                                                                   # [°]
 
     # Use mode to override number of bearings and degree of simplification (if
     # needed) ...
@@ -160,7 +160,7 @@ if __name__ == "__main__":
         print(f"Making \"{stub}\" ...")
 
         # Define bounding box ...
-        xmin, xmax, ymin, ymax = x - fov, x + fov, y - fov, y + fov             # [°], [°], [°], [°]
+        xmin, xmax, ymin, ymax = x - roi, x + roi, y - roi, y + roi             # [°], [°], [°], [°]
 
         # Deduce GeoJSON name and check what needs doing ...
         fname = f"{stub}.geojson"
@@ -168,7 +168,12 @@ if __name__ == "__main__":
             print(f"  Loading \"{fname}\" ...")
 
             # Load GeoJSON ...
-            multipoly = hffl.loadGeoJSON(fname)
+            multipoly = hffl.loadGeoJSON(
+                fname,
+                    debug = args.debug,
+                onlyValid = True,
+                   repair = True,
+            )
         else:
             print(f"  Saving \"{fname}\" ...")
 
@@ -265,7 +270,12 @@ if __name__ == "__main__":
                 print(f"    Buffering for {0.001 * dist:.1f} km (loading \"{fname}\") ...")
 
                 # Load GeoJSON ...
-                multipoly = hffl.loadGeoJSON(fname)
+                multipoly = hffl.loadGeoJSON(
+                    fname,
+                        debug = args.debug,
+                    onlyValid = True,
+                       repair = True,
+                )
             else:
                 print(f"    Buffering for {0.001 * dist:.1f} km (saving \"{fname}\") ...")
 
@@ -300,6 +310,17 @@ if __name__ == "__main__":
     for y, x, title, stub in locs:
         print(f"Making \"{stub}\" ...")
 
+        print("  Buffering point ...")
+
+        # Buffer Point ...
+        fovPoly = pyguymer3.geo.buffer(
+            shapely.geometry.point.Point(x, y),
+            30.0e3,
+            debug = args.debug,
+             nAng = nAng,
+             simp = simp,
+        )
+
         print("  Plotting data ...")
 
         # Create figure ...
@@ -308,21 +329,45 @@ if __name__ == "__main__":
         # Create axis ...
         ax = pyguymer3.geo.add_axis(
             fg,
-            debug = args.debug,
-             dist = 30.0e3,
-              lat = y,
-              lon = x,
+            add_coastlines = False,
+             add_gridlines = False,
+                     debug = args.debug,
+                      dist = 30.0e3,
+                       fov = fovPoly,
+                       lat = y,
+                       lon = x,
         )
 
         # Deduce GeoJSON name ...
         fname = f"{stub}.geojson"
 
         # Load GeoJSON ...
-        multipoly = hffl.loadGeoJSON(fname)
+        multipoly = hffl.loadGeoJSON(
+            fname,
+                debug = args.debug,
+            onlyValid = True,
+               repair = True,
+        )
+
+        # Extract data and buffer it by 10 metres to smooth out any kinks (it
+        # appears that Cartopy has difficulty drawing some of the Polygons and
+        # Cartopy just paints the entire map red - as of 20/Dec/2025, I have
+        # been unable to figure out which Polygon it is) ...
+        polys = pyguymer3.geo.extract_polys(
+            pyguymer3.geo.buffer(
+                multipoly.intersection(fovPoly),
+                10.0,
+                debug = args.debug,
+                 nAng = nAng,
+                 simp = simp,
+            ),
+            onlyValid = True,
+               repair = True,
+        )
 
         # Draw data ...
         ax.add_geometries(
-            pyguymer3.geo.extract_polys(multipoly, onlyValid = True, repair = True),
+            polys,
             cartopy.crs.PlateCarree(),
                 alpha = 1.0,
             edgecolor = "none",
@@ -343,11 +388,20 @@ if __name__ == "__main__":
             fname = f"{stub}{dist:04.0f}m.geojson"
 
             # Load GeoJSON ...
-            multipoly = hffl.loadGeoJSON(fname)
+            multipoly = hffl.loadGeoJSON(
+                fname,
+                    debug = args.debug,
+                onlyValid = True,
+                   repair = True,
+            )
 
             # Draw data ...
             ax.add_geometries(
-                pyguymer3.geo.extract_polys(multipoly, onlyValid = True, repair = True),
+                pyguymer3.geo.extract_polys(
+                    multipoly.intersection(fovPoly),
+                    onlyValid = True,
+                       repair = True,
+                ),
                 cartopy.crs.PlateCarree(),
                     alpha = 1.0,
                 edgecolor = cmap(float(i) / 5.0),
@@ -359,12 +413,13 @@ if __name__ == "__main__":
             labels.append(f"{0.001 * dist:.1f} km")
             lines.append(matplotlib.lines.Line2D([], [], color = cmap(float(i) / 5.0)))
 
-        # Calculate the regrid shape based off the resolution and size of the
-        # figure, as well as a safety factor (remembering Nyquist) ...
-        regrid_shape = (
-            round(2.0 * fg.dpi * fg.get_size_inches()[0]),
-            round(2.0 * fg.dpi * fg.get_size_inches()[1]),
-        )                                                                       # [px], [px]
+            # Calculate the regrid shape based off the resolution and the size
+            # of the figure, as well as a safety factor of 2 (remembering
+            # Nyquist) ...
+            regrid_shape = (
+                round(2.0 * fg.get_size_inches()[0] * fg.get_dpi()),
+                round(2.0 * fg.get_size_inches()[1] * fg.get_dpi()),
+            )                                                                   # [px], [px]
 
         # Draw background image ...
         ax.imshow(
