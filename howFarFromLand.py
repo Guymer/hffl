@@ -417,8 +417,8 @@ if __name__ == "__main__":
             # of the figure, as well as a safety factor of 2 (remembering
             # Nyquist) ...
             regrid_shape = (
-                round(2.0 * fg.get_size_inches()[0] * fg.get_dpi()),
-                round(2.0 * fg.get_size_inches()[1] * fg.get_dpi()),
+                round(2.0 * fg.get_figwidth() * fg.get_dpi()),
+                round(2.0 * fg.get_figheight() * fg.get_dpi()),
             )                                                                   # [px], [px]
 
         # Draw background image ...
