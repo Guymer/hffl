@@ -413,24 +413,25 @@ if __name__ == "__main__":
             labels.append(f"{0.001 * dist:.1f} km")
             lines.append(matplotlib.lines.Line2D([], [], color = cmap(float(i) / 5.0)))
 
-            # Calculate the regrid shape based off the resolution and the size
-            # of the figure, as well as a safety factor of 2 (remembering
-            # Nyquist) ...
-            regrid_shape = (
-                round(2.0 * fg.get_figwidth() * fg.get_dpi()),
-                round(2.0 * fg.get_figheight() * fg.get_dpi()),
-            )                                                                   # [px], [px]
+        # Calculate the regrid shape based off the resolution and the size of
+        # the figure, as well as a safety factor of 2 (remembering Nyquist) ...
+        regrid_shape = (
+            round(2.0 * fg.get_figwidth() * fg.get_dpi()),
+            round(2.0 * fg.get_figheight() * fg.get_dpi()),
+        )                                                                       # [px], [px]
 
         # Draw background image ...
         ax.imshow(
             matplotlib.pyplot.imread(f'OrdnanceSurveyBackgroundImages/{meta["MiniScale_(mono)_R22"]["greyscale"]}'),
-                    cmap = "gray",
-                  extent = meta["MiniScale_(relief1)_R22"]["extent"],
-                  origin = "upper",
-            regrid_shape = regrid_shape,
-               transform = cartopy.crs.OSGB(),
-                    vmin = 0.0,
-                    vmax = 1.0,
+                     cmap = "gray",
+                   extent = meta["MiniScale_(relief1)_R22"]["extent"],
+            interpolation = "gaussian",
+                   origin = "upper",
+             regrid_shape = regrid_shape,
+                 resample = False,
+                transform = cartopy.crs.OSGB(),
+                     vmax = 1.0,
+                     vmin = 0.0,
         )
 
         # Configure axis ...
