@@ -313,7 +313,7 @@ if __name__ == "__main__":
         print("  Buffering point ...")
 
         # Buffer Point ...
-        fovPoly = pyguymer3.geo.buffer(
+        fov = pyguymer3.geo.buffer(
             shapely.geometry.point.Point(x, y),
             30.0e3,
             debug = args.debug,
@@ -333,7 +333,7 @@ if __name__ == "__main__":
              add_gridlines = False,
                      debug = args.debug,
                       dist = 30.0e3,
-                       fov = fovPoly,
+                       fov = fov,
                        lat = y,
                        lon = x,
         )
@@ -355,7 +355,7 @@ if __name__ == "__main__":
         # been unable to figure out which Polygon it is) ...
         polys = pyguymer3.geo.extract_polys(
             pyguymer3.geo.buffer(
-                multipoly.intersection(fovPoly),
+                multipoly.intersection(fov),
                 50.0,
                 debug = args.debug,
                  nAng = nAng,
@@ -398,7 +398,7 @@ if __name__ == "__main__":
             # Draw data ...
             ax.add_geometries(
                 pyguymer3.geo.extract_polys(
-                    multipoly.intersection(fovPoly),
+                    multipoly.intersection(fov),
                     onlyValid = True,
                        repair = True,
                 ),
