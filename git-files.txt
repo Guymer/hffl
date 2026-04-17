@@ -1,0 +1,16 @@
+.editorconfig
+.github/FUNDING.yml
+.github/workflows/mypy.yaml
+.github/workflows/pylint.yaml
+.gitignore
+.mypy.ini
+.pylint.ini
+.shellcheckrc
+hffl/__init__.py
+hffl/dump.py
+hffl/loadGeoJSON.py
+hffl/loadShapefile.py
+howFarFromLand.py
+LICENCE.txt
+README.md
+requirements.txt
