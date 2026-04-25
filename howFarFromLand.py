@@ -48,6 +48,7 @@ if __name__ == "__main__":
         raise Exception("\"shapefile\" is not installed; run \"pip install --user pyshp\"") from None
     try:
         import shapely
+        import shapely.geometry
         import shapely.ops
     except:
         raise Exception("\"shapely\" is not installed; run \"pip install --user Shapely\"") from None
