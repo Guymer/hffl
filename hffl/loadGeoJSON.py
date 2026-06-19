@@ -30,7 +30,7 @@ def loadGeoJSON(
         raise Exception("\"pyguymer3\" is not installed; run \"pip install --user PyGuymer3\"") from None
 
     # Load the GeoJSON shape(s) and convert it to a Shapely shape ...
-    with open(fname, "rt", encoding = "utf-8") as fObj:
+    with open(fname, mode = "rt", encoding = "utf-8") as fObj:
         shape = shapely.geometry.shape(geojson.load(fObj))
 
     # Initialize list ...

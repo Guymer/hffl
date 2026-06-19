@@ -17,7 +17,7 @@ def dump(
         raise TypeError("\"poly\" is not a Polygon")
 
     # Open CSV file ...
-    with open("error.csv", "wt", encoding = "utf-8") as fObj:
+    with open("error.csv", mode = "wt", encoding = "utf-8") as fObj:
         # Write header ...
         fObj.write("lon [°],lat [°]\n")
 
