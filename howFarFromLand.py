@@ -358,7 +358,7 @@ if __name__ == "__main__":
         # been unable to figure out which Polygon it is) ...
         polys = pyguymer3.geo.extract_polys(
             pyguymer3.geo.buffer(
-                multipoly.intersection(fov),
+                shapely.geometry.polygon.orient(multipoly.intersection(fov)),
                 50.0,
                 debug = args.debug,
                  nAng = nAng,
@@ -401,7 +401,7 @@ if __name__ == "__main__":
             # Draw data ...
             ax.add_geometries(
                 pyguymer3.geo.extract_polys(
-                    multipoly.intersection(fov),
+                    shapely.geometry.polygon.orient(multipoly.intersection(fov)),
                     onlyValid = True,
                        repair = True,
                 ),
