@@ -8,19 +8,10 @@ if __name__ == "__main__":
     import io
     import json
     import os
-    import pathlib
+    import warnings
     import zipfile
 
     # Import special modules ...
-    try:
-        import cartopy
-        cartopy.config.update(
-            {
-                "cache_dir" : pathlib.PosixPath("~/.local/share/cartopy").expanduser(),
-            }
-        )
-    except:
-        raise Exception("\"cartopy\" is not installed; run \"pip install --user Cartopy\"") from None
     try:
         import geojson
     except:
@@ -42,6 +33,12 @@ if __name__ == "__main__":
         import matplotlib.pyplot
     except:
         raise Exception("\"matplotlib\" is not installed; run \"pip install --user matplotlib\"") from None
+    try:
+        import PIL
+        import PIL.Image
+        PIL.Image.MAX_IMAGE_PIXELS = 1024 * 1024 * 1024                         # [px]
+    except:
+        raise Exception("\"PIL\" is not installed; run \"pip install --user Pillow\"") from None
     try:
         import shapefile
     except:
@@ -371,7 +368,7 @@ if __name__ == "__main__":
         # Draw data ...
         ax.add_geometries(
             polys,
-            cartopy.crs.PlateCarree(),
+            pyguymer3.GEODETIC,
                 alpha = 1.0,
             edgecolor = "none",
             facecolor = "red",
@@ -405,7 +402,7 @@ if __name__ == "__main__":
                     onlyValid = True,
                        repair = True,
                 ),
-                cartopy.crs.PlateCarree(),
+                pyguymer3.GEODETIC,
                     alpha = 1.0,
                 edgecolor = cmap(float(i) / 5.0),
                 facecolor = "none",
@@ -423,19 +420,23 @@ if __name__ == "__main__":
             round(2.0 * fg.get_figheight() * fg.get_dpi()),
         )                                                                       # [px], [px]
 
-        # Draw background image ...
-        ax.imshow(
-            matplotlib.pyplot.imread(f'OrdnanceSurveyBackgroundImages/{meta["MiniScale_(mono)_R22"]["greyscale"]}'),
-                     cmap = "gray",
-                   extent = meta["MiniScale_(relief1)_R22"]["extent"],
-            interpolation = "gaussian",
-                   origin = "upper",
-             regrid_shape = regrid_shape,
-                 resample = False,
-                transform = cartopy.crs.OSGB(),
-                     vmax = 1.0,
-                     vmin = 0.0,
-        )
+        # Load the image and plot the converted image then let the context
+        # manager ".close()" the image object and then explicitly delete it (we
+        # don't want any memory leaks here) ...
+        with PIL.Image.open(
+            f'OrdnanceSurveyBackgroundImages/{meta["MiniScale_(mono)_R22"]["greyscale"]}',
+            mode = "r",
+        ) as iObj:
+            ax.imshow(
+                iObj.convert("RGB"),
+                       extent = meta["MiniScale_(mono)_R22"]["extent"],
+                interpolation = "gaussian",
+                       origin = "upper",
+                 regrid_shape = regrid_shape,
+                     resample = False,
+                    transform = pyguymer3.OSGB,
+            )
+        del iObj
 
         # Configure axis ...
         ax.legend(
@@ -449,9 +450,14 @@ if __name__ == "__main__":
         # Configure figure ...
         fg.tight_layout()
 
-        # Save figure ...
-        fg.savefig(f"{stub}.png")
-        matplotlib.pyplot.close(fg)
+        # Start a context manager for warnings ...
+        with warnings.catch_warnings():
+            # Hide "ignore" level warnings ...
+            warnings.simplefilter("ignore")
+
+            # Save figure ...
+            fg.savefig(f"{stub}.png")
+            matplotlib.pyplot.close(fg)
 
         # Optimize PNG ...
         pyguymer3.image.optimise_image(
